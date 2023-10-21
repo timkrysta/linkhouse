@@ -1,18 +1,19 @@
 <script setup lang="ts">
 import type { Article } from '@/types';
 
-defineProps<{
-  article: Article;
-}>();
+type Props = {
+    article: Article;
+};
+defineProps<Props>();
 </script>
 
 <template>
-    <a :href="article.link" class="article">
+    <router-link :to="`/article/${article.id}`" class="article">
         <h5>{{ article.title }}</h5>
         <div>{{ article.pubDate }}</div>
         <div>{{ article.category }}</div>
         <div>{{ article.description }}</div>
-    </a>
+    </router-link>
 </template>
 
 <style scoped>
