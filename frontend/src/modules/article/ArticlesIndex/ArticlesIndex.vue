@@ -1,23 +1,47 @@
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue';
+import { useRoute, useRouter, type LocationQueryValue } from 'vue-router';
+import { ref, computed, onMounted, watch } from 'vue';
 import type { Article } from '@/types';
-import TheFilters from './components/TheFilters.vue';
 import TheArticle from './components/TheArticle.vue';
 
-let articles = ref<Article[]>([]);
+const route = useRoute();
+const router = useRouter();
 
-watchEffect(async () => {
-  const url = 'http://localhost:8000/api/articles';
-  const response = await fetch(url);
-  articles.value = await response.json();
+const search = ref<LocationQueryValue | LocationQueryValue[]>(route.query.search || '');
+
+const articles = ref<Article[]>([]);
+
+const filteredArticles = computed(() => {
+    const searchString = search.value?.toString().toLowerCase();
+    if (searchString === undefined) {
+        return articles.value;
+    }
+    return articles.value.filter(article =>
+        article.title.toLowerCase().includes(searchString) ||
+        article.category.some(category => category.toLowerCase().includes(searchString))
+    );
+});
+
+onMounted(async () => {
+    const url = 'http://localhost:8000/api/articles';
+    const response = await fetch(url);
+    const allArticles: Article[] = await response.json();
+    articles.value = allArticles;
+});
+
+watch(search, () => {
+    router.push({
+        query: { search: search.value }
+    });
 });
 </script>
 
+
 <template>
-    <TheFilters />
-    <main>
-        <template v-for="article in articles" :key="article.id">
-          <TheArticle :article="article" />
-        </template>
-    </main>
+    <div>
+        <input type="search" placeholder="Search by title or category" v-model.trim="search" />
+        <main>
+            <TheArticle v-for="article in filteredArticles" :key="article.id" :article="article" />
+        </main>
+    </div>
 </template>
