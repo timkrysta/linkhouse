@@ -1,47 +1,23 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import type { Article } from '@/types';
+import TheFilters from './components/TheFilters.vue'
+import TheArticle from './components/TheArticle.vue'
+import { ref, watchEffect } from 'vue';
+
+let articles = ref<Article[]>([]);
+
+watchEffect(async () => {
+  const url = 'http://localhost:8000/api/articles';
+  const response = await fetch(url);
+  articles.value = await response.json();
+}); 
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
+  <TheFilters />
   <main>
-    <TheWelcome />
+    <template v-for="article in articles" :key="article.id">
+      <TheArticle :article="article" />
+    </template>
   </main>
 </template>
-
-<style scoped>
-header {
-  line-height: 1.5;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
-</style>
