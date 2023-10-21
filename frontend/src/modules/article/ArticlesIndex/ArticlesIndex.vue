@@ -24,9 +24,13 @@ const filteredArticles = computed(() => {
 
 onMounted(async () => {
     const url = 'http://localhost:8000/api/articles';
-    const response = await fetch(url);
-    const allArticles: Article[] = await response.json();
-    articles.value = allArticles;
+    try {
+        const response = await fetch(url);
+        const allArticles: Article[] = await response.json();
+        articles.value = allArticles;
+    } catch (error) {
+        console.error('Error fetching articles:', error);
+    }
 });
 
 watch(search, () => {
