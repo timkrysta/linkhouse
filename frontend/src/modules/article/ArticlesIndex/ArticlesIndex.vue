@@ -9,8 +9,8 @@ const route = useRoute();
 const router = useRouter();
 
 const search = ref<LocationQueryValue | LocationQueryValue[]>(route.query.search || '');
-
 const articles = ref<Article[]>([]);
+const errorMessage = ref<string>('');
 
 const filteredArticles = computed(() => {
     const searchString = search.value?.toString().toLowerCase();
@@ -29,8 +29,11 @@ onMounted(async () => {
         const response = await fetch(url);
         const allArticles: Article[] = await response.json();
         articles.value = allArticles;
+        if (allArticles.length === 0) {
+            errorMessage.value = 'Nasz blog nie posiada żadnych artykułów.'
+        }
     } catch (error) {
-        console.error('Error fetching articles:', error);
+        errorMessage.value = 'Wystapił problem podczas pobierania artykułów.';
     }
 });
 
@@ -58,7 +61,10 @@ watch(search, () => {
                 <ArticlePreview :article="article" />
             </router-link>
         </template>
-        <p v-if="filteredArticles.length === 0">
+        <p v-if="errorMessage !== ''">
+            {{ errorMessage }}
+        </p>
+        <p v-if="errorMessage === '' && filteredArticles.length === 0">
             Nie znaleźliśmy artykułów mających w tytule lub z kategorią: "{{ search }}"
         </p>
     </main>
