@@ -5,4 +5,5 @@ export type Article = {
     pubDate: string;
     category: string[];
     description: string;
+    html_content?: string;
 };
