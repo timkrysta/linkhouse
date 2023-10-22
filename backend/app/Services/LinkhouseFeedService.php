@@ -6,6 +6,7 @@ use App\Models\Article;
 use DateTime;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Stevebauman\Purify\Facades\Purify;
 
 class LinkhouseFeedService
 {
@@ -33,7 +34,6 @@ class LinkhouseFeedService
     {
         $xml = simplexml_load_string($xmlData);
 
-
         $items = [];
 
         foreach ($xml->channel->item as $item) {
@@ -49,8 +49,8 @@ class LinkhouseFeedService
                 'pubDate' => new DateTime($item->pubDate),
                 'category' => json_encode($categories),
                 'guid' => (string)$item->guid,
-                'description' => (string)$item->description,
-                'html_content' => (string) $item->children('content', true)->encoded,
+                'description' => $this->purifyDangerousHTML((string)$item->description),
+                'html_content' => $this->purifyDangerousHTML((string)$item->children('content', true)->encoded),
             ];
 
             $items[] = $itemData;
@@ -67,5 +67,10 @@ class LinkhouseFeedService
     {
         $table = with(new Article)->getTable();
         DB::table($table)->insert($articles);
+    }
+
+    private function purifyDangerousHTML(string $htmlString): string
+    {
+        return Purify::clean($htmlString);
     }
 }
