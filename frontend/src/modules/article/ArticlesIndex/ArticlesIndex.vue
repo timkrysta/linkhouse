@@ -58,6 +58,9 @@ watch(search, () => {
                 <ArticlePreview :article="article" />
             </router-link>
         </template>
+        <p v-if="filteredArticles.length === 0">
+            Nie znaleźliśmy artykułów mających w tytule lub z kategorią: "{{ search }}"
+        </p>
     </main>
 </template>
 
