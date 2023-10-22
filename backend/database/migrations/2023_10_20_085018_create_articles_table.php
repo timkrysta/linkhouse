@@ -20,6 +20,7 @@ return new class extends Migration
             $table->json('category');
             $table->string('guid');
             $table->text('description');
+            $table->text('html_content');
             $table->timestamps();
         });
     }

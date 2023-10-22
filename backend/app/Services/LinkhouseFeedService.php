@@ -50,7 +50,7 @@ class LinkhouseFeedService
                 'category' => json_encode($categories),
                 'guid' => (string)$item->guid,
                 'description' => (string)$item->description,
-                //'html_content' => (string) $item->children('content', true)->encoded,
+                'html_content' => (string) $item->children('content', true)->encoded,
             ];
 
             $items[] = $itemData;

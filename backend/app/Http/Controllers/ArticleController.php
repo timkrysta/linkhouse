@@ -41,6 +41,7 @@ class ArticleController extends Controller
             'category' => json_decode($article->category),
             'guid' => $article->guid,
             'description' => $article->description,
+            'html_content' => $article->html_content,
         ]);
     }
 }
