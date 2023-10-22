@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useRoute, useRouter, type LocationQueryValue } from 'vue-router';
+import { useRoute, useRouter, type LocationQueryValue, type LocationQueryRaw } from 'vue-router';
 import { ref, computed, onMounted, watch } from 'vue';
 import SearchIcon from './components/SearchIcon.vue';
 import ArticlePreview from '@/modules/article/components/ArticlePreview.vue';
@@ -35,9 +35,11 @@ onMounted(async () => {
 });
 
 watch(search, () => {
-    router.push({
-        query: { search: search.value }
-    });
+    const query: LocationQueryRaw = {};
+    if (search.value !== '') {
+        query.search = search.value;
+    }
+    router.push({ query });
 });
 </script>
 
