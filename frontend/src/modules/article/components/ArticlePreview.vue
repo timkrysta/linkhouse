@@ -8,7 +8,7 @@ defineProps<Props>();
 </script>
 
 <template>
-    <router-link :to="`/article/${article.id}`" class="card mb-3">
+    <div class="card mb-3">
         <h2 class="title mb-2">{{ article.title }}</h2>
         <div class="badge-container mb-2">
             <template v-for="category in article.category" :key="category">
@@ -17,7 +17,7 @@ defineProps<Props>();
         </div>
         <div class="lead">{{ article.description }}</div>
         <div class="publishDate">Opublikowano: {{ article.pubDate }}</div>
-    </router-link>
+    </div>
 </template>
 
 <style scoped>

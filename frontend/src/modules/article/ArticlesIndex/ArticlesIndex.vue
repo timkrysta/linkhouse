@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useRoute, useRouter, type LocationQueryValue } from 'vue-router';
 import { ref, computed, onMounted, watch } from 'vue';
-import SearchIcon from '@/components/icons/SearchIcon.vue';
-import ArticlePreview from './components/ArticlePreview.vue';
+import SearchIcon from './components/SearchIcon.vue';
+import ArticlePreview from '@/modules/article/components/ArticlePreview.vue';
 import type { Article } from '@/types';
 
 const route = useRoute();
@@ -51,7 +51,11 @@ watch(search, () => {
                 <input type="search" placeholder="Search by title or category" v-model.trim="search" />
             </div>
         </div>
-        <ArticlePreview v-for="article in filteredArticles" :key="article.id" :article="article" />
+        <template v-for="article in filteredArticles" :key="article.id">
+            <router-link :to="`/article/${article.id}`">
+                <ArticlePreview :article="article" />
+            </router-link>
+        </template>
     </main>
 </template>
 
