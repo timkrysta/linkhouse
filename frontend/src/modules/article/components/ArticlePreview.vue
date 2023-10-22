@@ -15,7 +15,7 @@ defineProps<Props>();
                 <span class="badge">{{ category }}</span>
             </template>
         </div>
-        <div class="lead">{{ article.description }}</div>
+        <div class="lead" v-html="article.description"></div>
         <div class="publishDate">Opublikowano: {{ article.pubDate }}</div>
     </div>
 </template>
